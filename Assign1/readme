@@ -1,0 +1,32 @@
+Yuzhou Liu 100853392
+
+
+Steps to run:
+
+1) Run "make" to compile  (make clean to delete executables)
+2) Make will compile 4 executables
+3) Run the following in seperate xterm terminals in the following order:
+	- ./controller
+	- ./cloud
+	- ./sensor <sensor_name> <threshold>
+	- ./actuator <actuator_name>
+
+   where:
+     <sensor_name> is for example: temp, humidity, etc
+     <actuator_name> is for example: AC, dehumidifier, etc
+     <threshold> must be integer between 0 and 10
+
+4) You can create up to 5 sensors and actuators.
+   The program maps sensor1 to actuator1, sensor2 to actuator2, etc.
+
+   Controller [Child] prints when:
+    - sensor is over threshold
+    - activating actuator and actuator has replied
+
+   Controller [Parent] prints when:
+    - sensor has gone over threshold and the message needs to be passed onto the cloud
+
+5) To end the program properly, do (CTRL+C) on the controller process. 
+   It will tell devices and cloud to end. Then close the message queue and FIFO.
+   Then it will end itself.
+
