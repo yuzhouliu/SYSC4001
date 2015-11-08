@@ -1,0 +1,28 @@
+Stats:
+
+Reference: 1M filesize, 100 buffers, BUFSIZ, semaphore S
+
+File size
+10k: 272 us
+100k: 4300 us
+500k: 35571 us
+1M: 77994 us
+2M: 128761 us
+
+Number of buffers
+10: 77789
+20: 78929
+50: 77564
+100: 78624
+150: 77087
+
+Buffer size
+128: 83474 us
+256: 80338 us
+512: 79801 us
+4096: 75000 us
+BUFSIZ (8192): 75695 us
+
+Semaphore S
+with: 72056 us
+without: 71718 us

@@ -1,0 +1,26 @@
+Student: Yuzhou Liu, 100853392
+
+To run the program, follow these steps:
+
+1) Run "make". 2 executables will be generated: producer and consumer.
+
+2) Run ./producer and ./consumer in separate terminals. 
+   Order does not matter. 
+   If you start producer first and the file is so large that buffer is full, it will wait for consumer.
+   If you start consumer first, it will wait for the producer.
+
+3) The Producer prints how many bytes read from input file and copied to shared memory.
+   The Consumer prints how many bytes read from shared memory and copied to output file.
+
+3) The contents of "_text_input.txt" will be copied to "_text_output.txt"
+
+4) Modify the contents of "_text_input.txt" as you wish and retest.
+
+
+
+Notes: 
+
+Running "make clean" will remove .o, executable files, and the _text_output.txt.
+
+The explanation for part B, and the bonus are contained in partB_and_Bonus.pdf
+
