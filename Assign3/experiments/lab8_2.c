@@ -4,10 +4,10 @@
 #include <pthread.h>
 
 #define NUM_CPU 4
-#define NUM_TASKS 5
+#define NUM_TASKS_PER_CPU 5
 
-void *producer_function(void *arg);
-void *consumer_function(void *arg);
+void *producer_thread_function(void *arg);
+void *consumer_thread_function(void *arg);
 
 int consumer_finished = 0;
 
@@ -26,7 +26,7 @@ typedef struct {
 	int head;
 	int tail;
 	int num_process;
-	task_struct tasks[NUM_TASKS];
+	task_struct tasks[NUM_TASKS_PER_CPU];
 } run_queue;
 
 run_queue global_run_queue[NUM_CPU];
@@ -38,7 +38,7 @@ int main() {
     void *thread_result;
     int thread_num;
 
-	res = pthread_create(&producer_thread, NULL, producer_function, NULL);
+	res = pthread_create(&producer_thread, NULL, producer_thread_function, NULL);
 	if (res != 0) {
 		perror("Producer thread creation failed\n");
 		exit(EXIT_FAILURE);
@@ -46,7 +46,7 @@ int main() {
 	sleep(1);		// Delay for producer to finish producing tasks
 	
 	for(thread_num = 0; thread_num < NUM_CPU; thread_num++) {
-		res = pthread_create(&(consumer_thread[thread_num]), NULL , consumer_function, (void *)&thread_num);
+		res = pthread_create(&(consumer_thread[thread_num]), NULL , consumer_thread_function, (void *)&thread_num);
 		if (res != 0) {
 			perror("Consumer thread creation failed\n");
 			exit(EXIT_FAILURE);
@@ -71,12 +71,13 @@ int main() {
     exit(EXIT_SUCCESS);
 }
 
-void *consumer_function(void *arg) {
+void *consumer_thread_function(void *arg) {
+	int i;
 	int this_num = *(int *)arg;
 	task_struct current_task;
 	
     printf("This is consumer %d\n", this_num);
-    for(int i = 0; i < global_run_queue[this_num].num_process; i++) {
+    for(i = 0; i < global_run_queue[this_num].num_process; i++) {
     	current_task = (global_run_queue[this_num]).tasks[i];
     	printf("consumed: %d\n", current_task.pid);
     }
@@ -84,14 +85,15 @@ void *consumer_function(void *arg) {
     pthread_exit(NULL);
 }
 
-void *producer_function(void *arg) {
+void *producer_thread_function(void *arg) {
+	int i;
 	int curr_cpu;
 	int buffer_tail;
 	task_struct *current_task;
 	int temp_pid = 0;
 	
 	printf("This is producer\n");
-	for(int i = 0; i < NUM_CPU * NUM_TASKS; i++) {
+	for(i = 0; i < NUM_CPU * NUM_TASKS_PER_CPU; i++) {
 		curr_cpu = i % 4;
 		buffer_tail = global_run_queue[curr_cpu].tail;
 		
