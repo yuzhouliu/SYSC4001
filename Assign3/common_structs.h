@@ -16,6 +16,8 @@
  * =============================================================================
  */
 
+#define NUM_RQ 3						// Number of RQs
+
 #define MAX_QUEUE_SIZE 10		// Max processor queue size
 
 /* Defines that specify schedule type */
@@ -23,17 +25,29 @@
 #define MY_SCHED_RR 1
 #define MY_SCHED_NORMAL 2
 
+/* Defines that specify state of task */
+#define READY 0
+#define RUNNING 1
+#define FINISHED 2
+
+/* Define for the max sleep avg of 10ms */
+#define MAX_SLEEP_AVG 10
+
 /* Structure to store Process information */
 typedef struct {
 	int pid;									// Process ID
+	int state;								// State: running, ready, or finished
+	int turnaround_started;		// Task was ran but now queued
 	int sched_type;						// Schedule type (ex: SCHED_FIFO, SCHED_RR, SCHED_NORMAL)
-	int static_prio;					// Static priority
-	int prio;									// Dynamic priority
-	int expected_exec_time;		// Expected Execution time
+	int priority;							// Priority (Static for FIFO and RR, Dynamic for NORMAL)
+	int expected_exec_time;		// Expected Total Service Time
 	
+	int sleep_avg;						// Average sleep time
 	int time_slice;						// Time slice
 	int accu_time_slice;			// Accumulated time slice
+	int remaining_exec_time;	// Remaining execution time
 	int last_cpu;							// Last CPU the process was executed on
+	int turnaround_time;			// Turn around time
 } task_struct;
 
 /* Circular buffer to store Processes/tasks */
@@ -51,9 +65,7 @@ typedef struct {
  *  RQ2 -> SCHED_NORMAL with dynamic priority of 130 <= prio
  */
 typedef struct {
-	circular_buffer rq0;
-	circular_buffer rq1;
-	circular_buffer rq2;
+	circular_buffer rq[NUM_RQ];
 } cpu_run_queue;
 
 #endif /* COMMON_STRUCTS_H */

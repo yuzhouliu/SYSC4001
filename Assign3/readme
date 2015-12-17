@@ -1,0 +1,19 @@
+README
+
+1) Run make
+
+2) Run: ./master <num of processes>
+   where <num of processes> is the number of processes created by producer
+
+3) Expand your terminal window to full, or at least 2/3 of screen
+
+3) In the terminal output you will see:
+   a) A list of processes produced by the producer
+   b) A growing list of actions performed by the consumer.
+      Contains info such as state changes, execution time, turnaround time, etc...
+   c) Every 2 seconds the Task Balancer will run
+
+NOTE: 
+The output is quite fast due to the requirements specified by the professor.
+
+
